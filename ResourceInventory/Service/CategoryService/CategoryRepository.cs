@@ -30,9 +30,9 @@ namespace ResourceInventory.Service.CategoryService
             
         }
 
-        public async Task<Category> GetCategoryById(int id)
+        public async Task<IEnumerable<Category>> GetCategoryById(int id)
         {
-            var result= await applicationDBContext.Categories.FindAsync(id);
+            var result= await applicationDBContext.Categories.Where(c=>c.Id==id).ToListAsync();
             return result;
            
             
@@ -48,7 +48,9 @@ namespace ResourceInventory.Service.CategoryService
                 await applicationDBContext.SaveChangesAsync();
                 return result;
             }
+               
             return null;
+          
              
         }
 

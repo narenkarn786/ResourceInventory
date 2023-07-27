@@ -70,7 +70,7 @@ namespace ResourceInventory.Controllers
 
             
         }
-        [HttpPut("{id:int}"),Route("UpdateCategory")]
+        [HttpPut,Route("UpdateCategory")]
         public async Task<ActionResult<Category>> UpdateCategories(Category category,int id)
         {
             try
@@ -92,7 +92,7 @@ namespace ResourceInventory.Controllers
             }
         }
 
-        [HttpDelete("{id:int}"),Route("DeleteCategory")]
+        [HttpDelete,Route("DeleteCategory")]
         public async Task<ActionResult<Category>> DeleteCategory(int id)
         {
             try

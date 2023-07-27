@@ -6,7 +6,7 @@ namespace ResourceInventory.Service.CategoryService
     {
         Task<Category> AddCategory(Category category);
         Task<IEnumerable<Category>> GetAllCategory();
-        Task<Category> GetCategoryById(int id);
+        Task<IEnumerable<Category>> GetCategoryById(int id);
         Task<Category> UpdateCategory(Category category);
         Task DeleteCategory(int id);
     }

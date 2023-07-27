@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using ResourceInventory.Model;
 using ResourceInventory.Service.CategoryService;
+using ResourceInventory.Service.ProductService;
+using ResourceInventory.Service.SubProductService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
+builder.Services.AddScoped<IProductRepository,ProductRepository>();
+builder.Services.AddScoped<ISubProductRepository,SubProductRepository>();
 
 var app = builder.Build();
 

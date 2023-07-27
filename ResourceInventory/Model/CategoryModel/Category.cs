@@ -8,7 +8,7 @@ namespace ResourceInventory.Model.CategoryModel
         public int Id { get; set; }
 
         [Required]
-        public string Name { get; set; } = string.Empty;
+        public string? Name { get; set; }
 
         public Nullable<int> Active { get; set; }
     }
