@@ -4,7 +4,7 @@
 
 namespace ResourceInventory.Migrations
 {
-    public partial class addNewMigrationToDb : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
