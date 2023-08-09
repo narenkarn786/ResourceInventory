@@ -12,8 +12,8 @@ using ResourceInventory.Model;
 namespace ResourceInventory.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20230301122318_addNewMigrationToDb")]
-    partial class addNewMigrationToDb
+    [Migration("20230808152131_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
