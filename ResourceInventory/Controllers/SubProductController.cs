@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ResourceInventory.Model.ProductModel;
 using ResourceInventory.Model.SubProductModel;
+using ResourceInventory.Service.ProductService;
 using ResourceInventory.Service.SubProductService;
 
 namespace ResourceInventory.Controllers
@@ -51,6 +53,49 @@ namespace ResourceInventory.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error inserting new subproduct");
             }
 
-            }          
+        }
+
+        [HttpPut,Route("UpdateSubProduct")]
+        public async Task<IActionResult> UpdateSubProduct(SubProduct subProduct)
+        {
+            try
+            {
+                var updatedSubProduct = await _subProductRepository.UpdateSubProduct(subProduct);
+
+                if (updatedSubProduct == null)
+                {
+                    return NotFound($"Sub-Product with Id={subProduct.Id} not found");
+                }
+
+                return Ok(updatedSubProduct);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error updating Sub-Product");
+            }
+        }
+
+        [HttpDelete, Route("Delete-SubProduct")]
+        public async Task<IActionResult> DeleteSubProduct(int id)
+        {
+            try
+            {
+                var subProductToDelete = await _subProductRepository.GetSubProductById(id);
+                if (subProductToDelete == null)
+                {
+                    return NotFound($"Sub-Product with Id={id} not found");
+                }
+                await _subProductRepository.DeleteSubProduct(id);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error deleting Sub-Product");
+            }
+        }
     }
 }
