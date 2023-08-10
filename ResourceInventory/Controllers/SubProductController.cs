@@ -35,6 +35,24 @@ namespace ResourceInventory.Controllers
            
         }
 
+        [HttpGet, Route("GetSubProductByID")]
+        public async Task<IActionResult> GetSubProductById(int id)
+        {
+            try
+            {
+                var result = await _subProductRepository.GetSubProductById(id);
+                if (result == null)
+                    return BadRequest("Data not found");
+                return Ok(result);
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error Retrieving Sub-Product");
+            }
+
+        }
+
 
         [HttpPost,Route("AddSubProduct")]
         public async Task<IActionResult> AddSubProduct(SubProductDto subProduct)
@@ -56,22 +74,24 @@ namespace ResourceInventory.Controllers
         }
 
         [HttpPut,Route("UpdateSubProduct")]
-        public async Task<IActionResult> UpdateSubProduct(SubProduct subProduct)
+        public async Task<IActionResult> UpdateSubProduct(SubProduct subProduct, int id)
         {
             try
             {
-                var updatedSubProduct = await _subProductRepository.UpdateSubProduct(subProduct);
+                if (id != subProduct.Id)
+                {
+                    return BadRequest("Sub-Product ID Mismatch");
+                }
 
-                if (updatedSubProduct == null)
+           
+                var subProductToBeUpdated = await _subProductRepository.GetSubProductById(id);
+                if (subProductToBeUpdated == null)
                 {
                     return NotFound($"Sub-Product with Id={subProduct.Id} not found");
                 }
 
+                var updatedSubProduct = await _subProductRepository.UpdateSubProduct(subProduct);
                 return Ok(updatedSubProduct);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
             }
             catch (Exception)
             {

@@ -38,6 +38,24 @@ namespace ResourceInventory.Controllers
 
         }
 
+        [HttpGet, Route("GetProductByID")]
+        public async Task<IActionResult> GetProductById(int id)
+        {
+            try
+            {
+                var result = await productRepository.GetProductById(id);
+                if (result == null)
+                    return BadRequest("Data not found");
+                return Ok(result);
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error Retrieving Product");
+            }
+
+        }
+
         [HttpPost, Route("AddNewProduct")]
         public async Task<IActionResult> AddProduct(AddProductDto product)
         {
@@ -56,22 +74,21 @@ namespace ResourceInventory.Controllers
             }
         }
         [HttpPut, Route("UpdateProduct")]
-        public async Task<IActionResult> UpdateProduct(Product product)
+        public async Task<IActionResult> UpdateProduct(Product product, int id)
         {
             try
             {
-                var updatedProduct = await productRepository.UpdateProduct(product);
+                if (id != product.Id)
+                    return BadRequest("Product Id Mismatch");
 
-                if (updatedProduct == null)
+                var productToUpdate = await productRepository.GetProductById(id);
+                if (productToUpdate == null)
                 {
                     return NotFound($"Product with Id={product.Id} not found");
                 }
 
-                return Ok(updatedProduct);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
+                var updateProduct = await productRepository.UpdateProduct(product);
+                return Ok(updateProduct);
             }
             catch (Exception)
             {
