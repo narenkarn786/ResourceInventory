@@ -3,6 +3,7 @@ using ResourceInventory.Model;
 using ResourceInventory.Service.CategoryService;
 using ResourceInventory.Service.ProductService;
 using ResourceInventory.Service.SubProductService;
+using ResourceInventory.Service.VendorService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
 builder.Services.AddScoped<IProductRepository,ProductRepository>();
 builder.Services.AddScoped<ISubProductRepository,SubProductRepository>();
+builder.Services.AddScoped<IVendorRepository,VendorRepository>();
 
 var app = builder.Build();
 

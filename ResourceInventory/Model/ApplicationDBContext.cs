@@ -2,7 +2,7 @@
 using ResourceInventory.Model.CategoryModel;
 using ResourceInventory.Model.ProductModel;
 using ResourceInventory.Model.SubProductModel;
-
+using ResourceInventory.Model.VendorModel;
 
 namespace ResourceInventory.Model
 {
@@ -19,7 +19,7 @@ namespace ResourceInventory.Model
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<SubProduct> SubProducts { get; set; }
-
+        public DbSet<Vendor> Vendors { get; set; }
 
     }
 }
