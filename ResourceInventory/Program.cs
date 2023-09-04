@@ -5,6 +5,7 @@ using ResourceInventory.Model;
 using ResourceInventory.Model.CategoryModel;
 using ResourceInventory.Service.CategoryService;
 using ResourceInventory.Service.ProductService;
+using ResourceInventory.Service.PurchaseService;
 using ResourceInventory.Service.SubProductService;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -18,7 +19,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ISubProductRepository, SubProductRepository>();
-
+builder.Services.AddScoped<IPurchaseRepository, PurchaseRepository>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
