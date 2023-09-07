@@ -22,6 +22,8 @@ namespace ResourceInventory.Controllers
             try
             {
                 var listOfPurchases = await _purchaseRepository.GetAllPurchases();
+                if(listOfPurchases == null)
+                    return NotFound("No purchases record found");
                 return Ok(listOfPurchases);
             }
             catch (Exception)
@@ -41,6 +43,10 @@ namespace ResourceInventory.Controllers
                     return NotFound();
                 }
                 var purchaseById = await _purchaseRepository.GetPurchaseById(id);
+                if(purchaseById == null)
+                {
+                    return BadRequest();
+                }
                 return Ok(purchaseById);
             }
             catch(Exception)
@@ -62,6 +68,11 @@ namespace ResourceInventory.Controllers
                 if (purchaseDTO.Invoice == null || purchaseDTO.Invoice.Length == 0)
                     return BadRequest("An image (photo) is required for the purchase create.");
                 var purchaseToAdd = await _purchaseRepository.AddPurchase(purchaseDTO,purchaseDTO.Invoice);
+
+                if(purchaseToAdd == null)
+                {
+                    return BadRequest();
+                }
                 return Ok(purchaseToAdd);
             }
             catch (Exception)

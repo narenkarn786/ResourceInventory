@@ -14,7 +14,7 @@ namespace ResourceInventory.Model.PurchaseModel
         public int Quantity { get; set; }
         public int UnitPrice { get; set; }
         public int TotalPrice { get; set; }
-        public string PaymentStatus { get; set; }
+        public string? PaymentStatus { get; set; }
         public string Invoice { get; set; }
         public string Notes { get; set; }
         public int? CategoryId { get; set; }

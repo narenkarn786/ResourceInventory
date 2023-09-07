@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using ResourceInventory.Model;
+using System.IO;
 using ResourceInventory.Model.CategoryModel;
 using ResourceInventory.Model.ProductModel;
 using ResourceInventory.Model.PurchaseModel;
@@ -13,7 +15,7 @@ namespace ResourceInventory.Service.PurchaseService
     public class PurchaseRepository : IPurchaseRepository
     {
         private readonly ApplicationDBContext _context;
-        private IWebHostEnvironment _environment;
+        private readonly IWebHostEnvironment _environment;
         private readonly IMapper _mapper;
         public PurchaseRepository(ApplicationDBContext context, IWebHostEnvironment environment, IMapper mapper) { 
             _context = context;
@@ -27,7 +29,8 @@ namespace ResourceInventory.Service.PurchaseService
             var category = await _context.Categories.FindAsync(purchaseDTO.CategoryId);
             var subProduct = await _context.SubProducts.FindAsync(purchaseDTO.SubProductId);
 
-            if(product == null || category == null || subProduct == null) {
+            if (product == null || category == null || subProduct == null)
+            {
                 return null;
             }
             var addPurchase = new Purchase
@@ -47,10 +50,13 @@ namespace ResourceInventory.Service.PurchaseService
             {
                 addPurchase.Invoice = SaveImage(image);
             }
+            
             await _context.AddAsync(addPurchase);
             await _context.SaveChangesAsync();
             return addPurchase;
         }
+
+   
 
         public async Task DeletePurchase(int purchaseId)
         {
@@ -71,6 +77,7 @@ namespace ResourceInventory.Service.PurchaseService
         public async Task<Purchase> GetPurchaseById(int purchaseId)
         {
             var purchaseById = await _context.Purchases.Where(x => x.PurchaseID == purchaseId).FirstOrDefaultAsync();
+           
             return purchaseById;
         }
 
@@ -79,46 +86,6 @@ namespace ResourceInventory.Service.PurchaseService
             var purchase = await _context.Purchases.AnyAsync(x=>x.PurchaseID == purchaseId);
             return purchase;
         }
-
-        //public async Task<Purchase> UpdatePurchase(Purchase purchase, IFormFile image)
-        //{
-        //    var purchaseExists = await _context.Purchases
-        //        .Include(x=>x.SubProduct)
-        //        .FirstOrDefaultAsync(p => p.PurchaseID == purchase.PurchaseID);
-
-        //    if(purchaseExists == null)
-        //    {
-        //        throw new InvalidOperationException("Sub-Product not found");
-        //    }
-
-        //    purchaseExists.Quantity = purchase.Quantity;
-        //    purchaseExists.UnitPrice = purchase.UnitPrice;
-        //    purchaseExists.TotalPrice = purchase.Quantity * purchase.UnitPrice;
-        //    purchaseExists.PaymentStatus = purchase.PaymentStatus;
-        //    purchaseExists.Notes = purchase.Notes;
-        //    //purchaseExists.Invoice = purchase.Invoice;
-        //    purchaseExists.DateOfPurchase = purchase.DateOfPurchase;
-
-        //    if (image != null && image.Length > 0)
-        //    {
-        //        DeleteExistingImage(purchase); // Optionally, delete the old image if necessary.
-        //        purchaseExists.Invoice = SaveImage(image);
-        //    }
-
-        //    if (purchase.SubProductId != purchaseExists.SubProductId)
-        //    {
-        //        var updatedPurchase = await _context.SubProducts.FindAsync(purchase.SubProductId);
-        //        if(updatedPurchase == null)
-        //        {
-        //            throw new InvalidOperationException("Purchase not found");
-        //        }
-
-        //        purchaseExists.SubProduct = updatedPurchase;
-        //    }
-
-        //    await _context.SaveChangesAsync();
-        //    return purchaseExists;
-        //}
 
         public async Task<Purchase> UpdatePurchase(PurchaseDTO purchaseDTO, IFormFile image)
         {
@@ -161,9 +128,12 @@ namespace ResourceInventory.Service.PurchaseService
         }
 
         private string SaveImage(IFormFile image)
-        {
-            //var uploadsFolderPath = Path.Combine(_environment.WebRootPath, "uploads");
-            var uploadsFolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "uploads");
+        { 
+            //string a = Path.GetFullPath(_environment.WebRootPath);
+            //var uploadsFolderPath = Path.Combine(_environment.WebRootPath,"Uploads");
+            //var uploadsFolderPath = Path.Combine(_environment.WebRootPath + "\\Test\\");
+            string uploadsFolderPath = Path.Combine(_environment.WebRootPath, "Image");
+
             if (!Directory.Exists(uploadsFolderPath))
                 Directory.CreateDirectory(uploadsFolderPath);
 
@@ -176,7 +146,7 @@ namespace ResourceInventory.Service.PurchaseService
             }
 
             // Return the relative path of the image, which can be saved in the database.
-            return "/uploads/" + uniqueFileName;
+            return "/Image/" + uniqueFileName;
         }
 
         // Helper method to delete an existing image when updating a task.
@@ -185,7 +155,7 @@ namespace ResourceInventory.Service.PurchaseService
             if (string.IsNullOrWhiteSpace(purchase.Invoice))
                 return;
 
-            var existingFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, purchase.Invoice.TrimStart('/'));
+            var existingFilePath = Path.Combine(_environment.WebRootPath, purchase.Invoice.TrimStart('/'));
             if (System.IO.File.Exists(existingFilePath))
                 System.IO.File.Delete(existingFilePath);
         }
