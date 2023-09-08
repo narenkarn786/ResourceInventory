@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ResourceInventory.Model.CategoryModel;
 using ResourceInventory.Model.ProductModel;
-using ResourceInventory.Model.PurchaseModel;
 using ResourceInventory.Model.SubProductModel;
 
 
@@ -20,7 +19,7 @@ namespace ResourceInventory.Model
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<SubProduct> SubProducts { get; set; }
-        public DbSet<Purchase> Purchases { get; set; }
+
 
     }
 }
