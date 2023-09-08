@@ -12,8 +12,8 @@ using ResourceInventory.Model;
 namespace ResourceInventory.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20230808152131_Initial")]
-    partial class Initial
+    [Migration("20230830072934_AddedPurchaseModel")]
+    partial class AddedPurchaseModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -66,6 +66,58 @@ namespace ResourceInventory.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("ResourceInventory.Model.PurchaseModel.Purchase", b =>
+                {
+                    b.Property<int>("PurchaseID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PurchaseID"), 1L, 1);
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateOfPurchase")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Invoice")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SubProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalPrice")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnitPrice")
+                        .HasColumnType("int");
+
+                    b.HasKey("PurchaseID");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("SubProductId");
+
+                    b.ToTable("Purchases");
+                });
+
             modelBuilder.Entity("ResourceInventory.Model.SubProductModel.SubProduct", b =>
                 {
                     b.Property<int>("Id")
@@ -96,6 +148,27 @@ namespace ResourceInventory.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("ResourceInventory.Model.PurchaseModel.Purchase", b =>
+                {
+                    b.HasOne("ResourceInventory.Model.CategoryModel.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+
+                    b.HasOne("ResourceInventory.Model.ProductModel.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("ResourceInventory.Model.SubProductModel.SubProduct", "SubProduct")
+                        .WithMany()
+                        .HasForeignKey("SubProductId");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("SubProduct");
                 });
 
             modelBuilder.Entity("ResourceInventory.Model.SubProductModel.SubProduct", b =>
